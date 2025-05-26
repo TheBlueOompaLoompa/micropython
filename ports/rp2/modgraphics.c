@@ -2,7 +2,6 @@
 #include "hardware/spi.h"
 
 static mp_obj_t graphics_init(mp_obj_t a_obj, mp_obj_t b_obj) {
-	spi_init
     return true;
 }
 static MP_DEFINE_CONST_FUN_OBJ_2(graphics_add_ints_obj, graphics_init);
