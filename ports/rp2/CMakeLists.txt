@@ -180,6 +180,8 @@ set(MICROPY_SOURCE_PORT
     msc_disk.c
     mbedtls/mbedtls_port.c
     ${CMAKE_BINARY_DIR}/pins_${MICROPY_BOARD}.c
+
+    modgraphics.c
 )
 
 set(MICROPY_SOURCE_QSTR
@@ -202,6 +204,8 @@ set(MICROPY_SOURCE_QSTR
     ${MICROPY_PORT_DIR}/rp2_pio.c
     ${MICROPY_PORT_DIR}/rp2_dma.c
     ${CMAKE_BINARY_DIR}/pins_${MICROPY_BOARD}.c
+
+    ${MICROPY_PORT_DIR}/modgraphics.c
 )
 
 set(PICO_SDK_COMPONENTS
@@ -508,6 +512,9 @@ target_sources(${MICROPY_TARGET} PRIVATE
 target_link_libraries(${MICROPY_TARGET} micropy_lib_mbedtls)
 
 target_link_libraries(${MICROPY_TARGET} usermod)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../../sprig_hal sprig_hal)
+target_link_libraries(${MICROPY_TARGET} sprig_hal)
 
 target_include_directories(${MICROPY_TARGET} PRIVATE
     ${MICROPY_INC_CORE}
