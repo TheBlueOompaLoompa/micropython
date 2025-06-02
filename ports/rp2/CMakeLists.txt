@@ -11,13 +11,13 @@ get_filename_component(MICROPY_DIR "../.." ABSOLUTE)
 if (PICO_SDK_PATH_OVERRIDE)
     set(PICO_SDK_PATH ${PICO_SDK_PATH_OVERRIDE})
 else()
-    set(PICO_SDK_PATH ../../lib/pico-sdk)
+    set(PICO_SDK_PATH ${MICROPY_DIR}/lib/pico-sdk)
 endif()
 
 if (PICO_SDK_EXTRAS_PATH_OVERRIDE)
     set(PICO_EXTRAS_PATH ${PICO_EXTRAS_PATH_OVERRIDE})
 else()
-    set(PICO_EXTRAS_PATH ../../lib/pico-extras)
+	set(PICO_EXTRAS_PATH ${MICROPY_DIR}/lib/pico-extras)
 endif()
 
 # Use the local tinyusb instead of the one in pico-sdk
@@ -96,12 +96,17 @@ list(APPEND CMAKE_MODULE_PATH "${MICROPY_PORT_DIR}/tools_patch")
 # Include component cmake fragments
 include(${MICROPY_DIR}/py/py.cmake)
 include(${MICROPY_DIR}/extmod/extmod.cmake)
-include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
+include(${MICROPY_PORT_DIR}/pico_sdk_import.cmake)
+include(${MICROPY_PORT_DIR}/pico_extras_import.cmake)
 
 # Define the top-level project
 project(${MICROPY_TARGET})
 
 pico_sdk_init()
+add_definitions(
+    -DSAMPLES_PER_BUFFER=\(256*6\)
+    -DBUFFER_COUNT=3
+)
 
 include(${MICROPY_DIR}/py/usermod.cmake)
 
@@ -515,12 +520,10 @@ target_sources(${MICROPY_TARGET} PRIVATE
     ${MICROPY_SOURCE_BOARD}
 )
 
-target_link_libraries(${MICROPY_TARGET} micropy_lib_mbedtls)
-
-target_link_libraries(${MICROPY_TARGET} usermod)
-
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../../sprig_hal sprig_hal)
-target_link_libraries(${MICROPY_TARGET} sprig_hal)
+target_link_libraries(${MICROPY_TARGET}
+    micropy_lib_mbedtls
+    usermod
+)
 
 target_include_directories(${MICROPY_TARGET} PRIVATE
     ${MICROPY_INC_CORE}

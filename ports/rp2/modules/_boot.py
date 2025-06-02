@@ -1,6 +1,8 @@
 import vfs
 import machine, rp2
-
+import graphics
+from graphics import fill, fill_rect, fill_circle, pixel, color, text
+from machine import I2S, Pin
 
 # Try to mount the filesystem, and format the flash if it doesn't exist.
 # Note: the flash requires the programming size to be aligned to 256 bytes.
@@ -13,3 +15,7 @@ except:
 vfs.mount(fs, "/")
 
 del vfs, bdev, fs
+
+# Sprig Firmware Start
+graphics.init()
+fill(0)
